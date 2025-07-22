@@ -1,0 +1,15 @@
+# main
+
+## Log Files
+config
+error.log
+startup.log
+stumpwm.log*
+
+## Dependencies
+contrib/*
+ocicl/*
+
+# files
+files/xorg/dot-icons/*
+files/xorg/fonts/*
