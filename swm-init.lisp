@@ -13,6 +13,7 @@
 
 (ignore-errors
   ;; A little dirty - may be rough on first run...
+  ;; (uiop:chdir (uiop:xdg-config-home "stumpwm/"))
   (asdf:load-system :local-time)
   (add-package-local-nickname :lt :local-time))
 

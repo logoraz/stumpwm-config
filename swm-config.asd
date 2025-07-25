@@ -14,13 +14,13 @@
                "cpu"
                "mem"
                "battery-portable"
-               "wifi"
                "notify"
                ;; Local Systems/Libraries (modified stumpwm-contrib modules)
+               "swm-wifi"              ;; TODO rewrite to work with `wi'
                "swm-wpctl"
                "swm-end-session"
                "swm-screenshot"
-               "swm-bluetooth"
+               "swm-bluetooth"         ;; TODO fix for Fedora
                "swm-brightness")
   :components ;; Map of System
   ((:module "source"

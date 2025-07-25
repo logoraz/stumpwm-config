@@ -38,8 +38,9 @@
       swm-wpctl:*mixer-command*      "/usr/bin/playerctl"
       swm-wpctl:*modeline-fmt*       "^f2󱄠^f0 %v"
 
-      wifi::*iwconfig-path*          "/usr/bin/iw"
-      wifi::*wifi-modeline-fmt*      "^f2^f0 %e %p"
+      ;; TODO Create new module to handle both `wi' and `wiconfig'
+      ;; wifi::*iwconfig-path*          "/usr/bin/iw"
+      ;; wifi::*wifi-modeline-fmt*      "^f2^f0 %e %p"
 
       ;; mode-line formatters
       *hidden-window-color*          "^**"
@@ -57,6 +58,7 @@
     ("%W")    ;; Windows
     ("^>")    ;; StumpWM modeline seperator
     (,+L+)    ;; Common Lisp Logo o.O
+    ;; ("mu-unread" . t) ;; example of supply shell command
     ;; ("%C %M") ;; CPU usage & Memory usage
     ("%P")    ;; Audio info
     ;; ("%I")    ;; Wifi status
@@ -66,29 +68,28 @@
 
 ;;; ref: https://config.phundrak.com/stumpwm/
 (defun generate-modeline (elements &optional not-invertedp rightp)
-  "Generate a modeline for StumpWM.
-ELEMENTS should be a list of `cons'es which `first' is the modeline
-formatter or the shell command to run, and their `rest' is either nil
-when the `first' is a formatter and t when it is a shell command."
+  "Generate a 'Powerline' style modeline for StumpWM.
+
+ELEMENTS should be a list of cons cells where `car` is the modeline
+formatter or the shell command to run, and their `cdr` is either nil
+when the `car` is a formatter and t when it is a shell command."
   (when elements
     (cons (format nil " ^[~A^]^(:bg \"~A\") "
                   (format nil "^(:fg \"~A\")^(:bg \"~A\")~A"
-                          (if (xor not-invertedp rightp)
-                              *nord00* *nord02*)
-                          (if (xor not-invertedp rightp)
-                              *nord02* *nord00*)
+                          (if (xor not-invertedp rightp) *nord00* *nord02*)
+                          (if (xor not-invertedp rightp) *nord02* *nord00*)
                           (if rightp "" ""))
                   (if not-invertedp *nord02* *nord00*))
           (let* ((current-element (first elements))
-                 (formatter       (first current-element))
-                 (commandp        (rest current-element)))
+                 (formatter       (car current-element))
+                 (commandp        (cdr current-element)))
             (cons (if commandp
                       `(:eval (run-shell-command ,formatter t))
                       (format nil "~A" formatter))
                   (generate-modeline (rest elements)
                                      (not not-invertedp)
-                                     (if (string= "^>" (first (first elements)))
-                                         t rightp)))))))
+                                     (if (string= "^>" (car (first elements))) t 
+                                         rightp)))))))
 
 (defcommand reload-modeline () ()
   "Reload modeline."

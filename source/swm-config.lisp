@@ -18,6 +18,7 @@
 ;; A startup message can be used when initializing StumpWM, for now set to nil.
 (setf *startup-message* nil)
 
+(setf *mouse-focus-policy* :sloppy)
 
 ;;;; X11 Settings
 

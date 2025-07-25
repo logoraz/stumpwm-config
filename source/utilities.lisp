@@ -19,9 +19,20 @@
 ;; You can test notifications (if you have notify-send installed) with:
 ;; notify-send 'Hello world!' 'This is an example notification.'
 
+(defun save-log-file (pathspec output)
+  "Save log files for initializing lem-config"
+  (with-open-file (strm (uiop:xdg-config-home pathspec)
+                        :direction :output
+                        :if-exists :append
+                        :if-does-not-exist :create)
+    (format strm "~A - Load swm-config output: ~A~%" (current-time) output)))
 
-(when *initializing*
-  (mode-line))
+(multiple-value-bind (result error-condition)
+    (ignore-errors
+      (when *initializing*
+        (mode-line)))
+  (if error-condition
+      (save-log-file "stumpwm/modeline-error.log" error-condition)))
 
 ;;; Notify that everything is ready!
 (setf *startup-message* (concat "^6*^BGreetings logoraz! "
